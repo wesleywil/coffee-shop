@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Models\Product;
+
 class ProductController extends Controller
 {
     /**
@@ -11,8 +13,10 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return response()->json([
-            'data'=>['message'=>'test']
+        $products = Product::all();
+
+        return response()-> json([
+            'data'=>$products
         ]);
     }
 
@@ -21,7 +25,23 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request -> validate([
+            'title' => 'required|max:255',
+            'description' => 'required|string',
+            'image' => 'required|max:255',
+            'price' => 'required|numeric',
+        ]);
+
+        // Create a new product with the validated data
+        $product = new Product();
+        $product-> title = $validatedData['title'];
+        $product-> description = $validatedData['description'];
+        $product-> image = $validatedData['image'];
+        $product-> price = $validatedData['price'];
+        $product-> save();
+
+        // Return a response indicating success
+        return response()-> json(['message' => 'Product created successfully!'],201);
     }
 
     /**
@@ -29,7 +49,16 @@ class ProductController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $product = Product::find($id);
+
+        if(!$product){
+            return response()->json([
+                'error'=> 'Product not found'
+            ],404);
+        }
+        return response()->json([
+            'data' => $product
+        ]);
     }
 
     /**
@@ -37,7 +66,29 @@ class ProductController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+
+        $validatedData = $request -> validate([
+            'title' => 'required|max:255',
+            'description' => 'required|string',
+            'image' => 'required|max:255',
+            'price' => 'required|numeric',
+        ]);
+
+        //Find the product by ID...
+        $product = Product::findOrFail($id);
+
+        $product-> title = $validatedData['title'];
+        $product-> description = $validatedData['description'];
+        $product-> image = $validatedData['image'];
+        $product-> price = $validatedData['price'];
+        $product-> save();
+
+        // Return a response indicating success
+        return response()->json([
+            'success'=> true,
+            'message'=> 'Product updated successfully.',
+            'data'=> $product
+        ]);
     }
 
     /**
@@ -45,6 +96,14 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $product = Product::find($id);
+
+        if($product){
+            $product->delete();
+            return response()->json(['message'=> 'Product deleted successfully!']);
+        }else{
+            return response()->json(['message'=> 'Product not found'],404);
+        }
+
     }
 }
