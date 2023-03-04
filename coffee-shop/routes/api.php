@@ -25,9 +25,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //Products API
 Route::get('/products', [ProductController::class, 'index']);
 Route::get('/products/{id}', [ProductController::class, 'show']);
-Route::post('/products', [ProductController::class, 'store']);
-Route::put('/products/{id}', [ProductController::class, 'update']);
-Route::delete('/products/{id}', [ProductController::class, 'destroy']);
+Route::middleware('auth:sanctum')-> post('/products', [ProductController::class, 'store']);
+Route::middleware('auth:sanctum')-> put('/products/{id}', [ProductController::class, 'update']);
+Route::middleware('auth:sanctum')-> delete('/products/{id}', [ProductController::class, 'destroy']);
 //Authentication API
 Route::post('/login', [AuthController::class, 'authenticate']);
 Route::post('/logout', [AuthController::class, 'logout']);
