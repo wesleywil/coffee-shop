@@ -75,8 +75,13 @@ class ProductController extends Controller
         ]);
 
         //Find the product by ID...
-        $product = Product::findOrFail($id);
+        $product = Product::find($id);
 
+        if(!$product){
+            return response()->json([
+                'error'=> 'Product not found'
+            ],404);
+        }
         $product-> title = $validatedData['title'];
         $product-> description = $validatedData['description'];
         $product-> image = $validatedData['image'];
