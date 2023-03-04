@@ -2,34 +2,50 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
     public function register(Request $request){
-        //Validate the request data
-        $validatedData = $request->validate([
-            'name'=>'required',
-            'email'=>'required|email|unique:users,email',
-            'password'=>'required|min:6',
-        ]);
+        try{
+            //Validated
+            $validatedUser = Validator::make($request-> all(),[
+                'name'=> 'required',
+                'email'=>'required|email|unique:users,email',
+                'password'=>'required'
+            ]);
 
-        //Create the new user
-        $user = new User();
-        $user->name = $validatedData['name'];
-        $user->email = $validatedData['email'];
-        $user->password = bcrypt($validatedData['password']);
-        $user->admin = false; // Set the admin property to false
-        $user->save();
+            if($validatedUser->fails()){
+                return response()->json([
+                    'status'=> false,
+                    'message'=> 'validation error',
+                    'errors'=>$validatedUser->users()
+                ],401);
+            }
 
-        // Generate a token for the new user
-        $token = $user-> createToken('API Token')-> accessToken;
+            $user = User::create([
+                'name'=>$request -> name,
+                'email'=> $request->email,
+                'password'=> Hash::make($request->password),
+                'admin'=> false 
+            ]);
 
-        // Return a JSON response with the token
-        return response()->json([
-            'status'=> 'success',
-            'token'=>$token
-        ]);
+            return response()->json([
+                'status'=> true,
+                'message'=>'User Created Successfully',
+                'token'=> $user-> createToken("API TOKEN")-> plainTextToken
+            ],200);
+            
+        }catch(\Thowable $th){
+            return response()->json([
+                'status' => false,
+                'message'=> $th-> getMessage()
+            ],500);
+        }
     }
 }
