@@ -3,9 +3,11 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\ProductController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ReservationController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -21,6 +23,11 @@ use App\Http\Controllers\UserController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+//Authentication API
+Route::post('/login', [AuthController::class, 'authenticate']);
+Route::post('/logout', [AuthController::class, 'logout']);
+//Users API
+Route::post('/register', [UserController::class, 'register']);
 
 //Products API
 Route::get('/products', [ProductController::class, 'index']);
@@ -28,8 +35,10 @@ Route::get('/products/{id}', [ProductController::class, 'show']);
 Route::middleware('auth:sanctum')-> post('/products', [ProductController::class, 'store']);
 Route::middleware('auth:sanctum')-> put('/products/{id}', [ProductController::class, 'update']);
 Route::middleware('auth:sanctum')-> delete('/products/{id}', [ProductController::class, 'destroy']);
-//Authentication API
-Route::post('/login', [AuthController::class, 'authenticate']);
-Route::post('/logout', [AuthController::class, 'logout']);
-//Users API
-Route::post('/register', [UserController::class, 'register']);
+
+//Reservations API
+Route::middleware('auth:sanctum')-> get('/reservations', [ReservationController::class, 'index']);
+Route::middleware('auth:sanctum')-> get('/reservations/{id}', [ReservationController::class, 'show']);
+Route::middleware('auth:sanctum')-> post('/reservations', [ReservationController::class, 'store']);
+Route::middleware('auth:sanctum')-> put('/reservations/{id}', [ReservationController::class, 'update']);
+Route::middleware('auth:sanctum')-> delete('/reservations/{id}', [ReservationController::class, 'destroy']);
