@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit/dist/createSlice";
+import { createSlice } from "@reduxjs/toolkit";
 
 export interface UtilsState {
   categories_tab: string;
@@ -12,12 +12,12 @@ export const utilsSlice = createSlice({
   name: "utils",
   initialState,
   reducers: {
-    swtich_categories: (state, { payload }) => {
+    switch_categories: (state, { payload }) => {
       state.categories_tab = payload;
     },
   },
 });
 
-export const { swtich_categories } = utilsSlice.actions;
+export const { switch_categories } = utilsSlice.actions;
 
 export default utilsSlice.reducer;
