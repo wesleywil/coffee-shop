@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Homepage from "./pages/homepage/homepage";
 import Catalog from "./pages/catalog/catalog";
 import SignIn from "./pages/signIn/signIn";
+import Register from "./pages/register/register";
 
 //Components
 import Navbar from "./components/navbar/navbar.component";
@@ -18,8 +19,9 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Homepage />} />
-          <Route path="/catalog" element={<Catalog />} />
           <Route path="/login" element={<SignIn />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/catalog" element={<Catalog />} />
         </Routes>
       </BrowserRouter>
     </div>
