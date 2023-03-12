@@ -30,6 +30,7 @@ class ProductController extends Controller
             'description' => 'required|string',
             'image' => 'required|max:255',
             'price' => 'required|numeric',
+            'category' => 'required|string',
         ]);
 
         // Create a new product with the validated data
@@ -38,6 +39,7 @@ class ProductController extends Controller
         $product-> description = $validatedData['description'];
         $product-> image = $validatedData['image'];
         $product-> price = $validatedData['price'];
+        $product-> category = $validatedData['category'];
         $product-> save();
 
         // Return a response indicating success
@@ -72,6 +74,7 @@ class ProductController extends Controller
             'description' => 'required|string',
             'image' => 'required|max:255',
             'price' => 'required|numeric',
+            'category' => 'required|string',
         ]);
 
         //Find the product by ID...
@@ -86,6 +89,7 @@ class ProductController extends Controller
         $product-> description = $validatedData['description'];
         $product-> image = $validatedData['image'];
         $product-> price = $validatedData['price'];
+        $product-> category = $validatedData['category'];
         $product-> save();
 
         // Return a response indicating success

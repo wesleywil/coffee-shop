@@ -15,8 +15,9 @@ return new class extends Migration
             $table->id();
             $table-> string('title');
             $table-> text('description');
-            $table->decimal('price', 8, 2); // 8 digits in total, with 2 decimal places
+            $table-> decimal('price', 8, 2); // 8 digits in total, with 2 decimal places
             $table-> string('image')-> nullable();
+            $table-> string('category')->default("coffee");
             $table->timestamps();
         });
     }
