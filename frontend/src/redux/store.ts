@@ -1,12 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
 import utilsReducer from "./utils/utils";
 import productsReducer from "./products/products";
+import AccountsReducer from "./accounts/accounts";
 
 
 export const store = configureStore({
     reducer:{
         utils:utilsReducer,
         products:productsReducer,
+        accounts:AccountsReducer,
     }
 });
 
