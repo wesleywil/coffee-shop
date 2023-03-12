@@ -1,5 +1,7 @@
-import { useSelector } from "react-redux";
-import type { RootState } from "../../redux/store";
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import type { RootState, AppDispatch } from "../../redux/store";
+import { fetchProducts } from "../../redux/products/products";
 
 import CatalogCategories from "../../components/catalog_categories/catalog_categories.component";
 import CatalogItem from "../../components/catalog_item/catalog_item.component";
@@ -8,6 +10,16 @@ const Catalog = () => {
   const categories_item = useSelector(
     (state: RootState) => state.utils.categories_tab
   );
+  const status = useSelector((state: RootState) => state.products.status);
+  const products = useSelector((state: RootState) => state.products.products);
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    if (status === "idle") {
+      dispatch(fetchProducts());
+    }
+  }, []);
+
   return (
     <div>
       <div className="flex flex-col justify-center items-center pb-4">
@@ -21,41 +33,19 @@ const Catalog = () => {
             <CatalogCategories />
 
             <div className="w-full flex flex-wrap justify-center gap-2">
-              {categories_item === "coffee" ? (
-                <>
+              {products.length ? (
+                products.map((item) => (
                   <CatalogItem
-                    title="Coffee Name 1"
-                    price={12.0}
-                    description="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloribus nisi blanditiis labore totam cupiditate quisquam quae nemo dolores quas sed iste ut, tempora in, nulla explicabo? Quo esse autem debitis!"
+                    key={item.id}
+                    title={item.title}
+                    price={item.price}
+                    description={item.description}
                   />
-                  <CatalogItem
-                    title="Coffee Name 2"
-                    price={14.0}
-                    description="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloribus nisi blanditiis labore totam cupiditate quisquam quae nemo dolores quas sed iste ut, tempora in, nulla explicabo? Quo esse autem debitis!"
-                  />
-                  <CatalogItem
-                    title="Coffee Name 3"
-                    price={16.99}
-                    description="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloribus nisi blanditiis labore totam cupiditate quisquam quae nemo dolores quas sed iste ut, tempora in, nulla explicabo? Quo esse autem debitis!"
-                  />
-                  <CatalogItem
-                    title="Coffee Name 4"
-                    price={8.5}
-                    description="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloribus nisi blanditiis labore totam cupiditate quisquam quae nemo dolores quas sed iste ut, tempora in, nulla explicabo? Quo esse autem debitis!"
-                  />
-                </>
-              ) : categories_item === "tea" ? (
-                <CatalogItem
-                  title="Tea Name 1"
-                  price={5.5}
-                  description="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloribus nisi blanditiis labore totam cupiditate quisquam quae nemo dolores quas sed iste ut, tempora in, nulla explicabo? Quo esse autem debitis!"
-                />
+                ))
               ) : (
-                <CatalogItem
-                  title="Sweats and Treats Name 1"
-                  price={2.5}
-                  description="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloribus nisi blanditiis labore totam cupiditate quisquam quae nemo dolores quas sed iste ut, tempora in, nulla explicabo? Quo esse autem debitis!"
-                />
+                <h1 className="text-2xl md:text-4xl font-bold">
+                  CHOOSE A CATEGORY
+                </h1>
               )}
             </div>
           </div>
