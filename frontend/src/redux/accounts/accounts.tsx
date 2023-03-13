@@ -5,7 +5,8 @@ export interface User {
   id: number;
   name: string;
   email: string;
-  password: string;
+  created_at: string;
+  updated_at: string;
   admin: boolean;
 }
 
@@ -25,7 +26,15 @@ const initialState: AccountsState = {
 
 export const registerUser = createAsyncThunk(
   "account/registerUser",
-  async ({ name, email, password }: Partial<User>) => {
+  async ({
+    name,
+    email,
+    password,
+  }: {
+    name: string;
+    email: string;
+    password: string;
+  }) => {
     const config = {
       headers: { "Content-Type": "application/json" },
     };
@@ -35,37 +44,39 @@ export const registerUser = createAsyncThunk(
       { name, email, password },
       config
     );
+    localStorage.setItem("userToken", res.data.data.token);
     return res.data.data.token;
   }
 );
 
-export const getUserInfo = createAsyncThunk(
-  "account/getUserInfo",
-  async ({ userToken }: Partial<AccountsState>) => {
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${userToken}`,
-      },
-    };
+export const getUserInfo = createAsyncThunk("account/getUserInfo", async () => {
+  const userToken = localStorage.getItem("userToken");
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${userToken}`,
+    },
+  };
 
-    const res = await axios.get("http://127.0.0.1:8000/api/user", config);
-    return res.data.data;
-  }
-);
+  const res = await axios.get("http://127.0.0.1:8000/api/user", config);
+  return res.data;
+});
 
 export const loginUser = createAsyncThunk(
   "account/login",
-  async ({ email, password }: Partial<User>) => {
+  async ({ email, password }: { email: string; password: string }) => {
     const config = {
       headers: { "Content-Type": "application/json" },
     };
+
     const res = await axios.post(
       "http://127.0.0.1:8000/api/login",
       { email, password },
       config
     );
-    return res.data.data.token;
+    console.log("USER TOKEN FROM LOGIN => ", res.data.token);
+    localStorage.setItem("userToken", res.data.token);
+    return res.data.token;
   }
 );
 
