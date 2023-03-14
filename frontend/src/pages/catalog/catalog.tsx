@@ -22,13 +22,15 @@ const Catalog = () => {
 
   return (
     <div>
-      <div className="flex flex-col justify-center items-center pb-4">
-        <div className="mt-36 self-center flex justify-center gap-2 p-4">
-          <div className="flex-none mr-16 hidden md:block border">
+      <div className="flex justify-center items-center pb-4">
+        <div className="mt-36 self-center flex xl:flex-row	md:flex-col-reverse justify-center gap-2 p-4 ">
+          <div className="mx-auto flex-none mr-16 hidden md:block xl:w-1/2 md:w-1/2 md:mx-auto">
             <img src="https://dummyimage.com/600x600" alt="Cup of coffee" />
           </div>
-          <div className="flex-none flex flex-col gap-1 w-11/12 md:w-[40rem] border">
-            <h3 className="text-2xl font-bold text-center mb-2">Catalog</h3>
+          <div className="flex-none flex flex-col gap-1 w-11/12 md:w-[40rem] border border-[#F3EFE6]">
+            <h3 className="text-2xl text-[#F3EFE6] font-bold text-center mb-2">
+              Catalog
+            </h3>
 
             <CatalogCategories />
 
@@ -43,7 +45,7 @@ const Catalog = () => {
                   />
                 ))
               ) : (
-                <h1 className="text-2xl md:text-4xl font-bold">
+                <h1 className="text-2xl md:text-4xl text-[#F3EFE6] font-bold">
                   CHOOSE A CATEGORY
                 </h1>
               )}

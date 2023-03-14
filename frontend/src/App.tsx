@@ -31,7 +31,7 @@ function App() {
   }, []);
 
   return (
-    <div className="min-h-full h-screen w-screen">
+    <div className="bg-[#4F2B1D] h-screen min-h-full w-screen overflow-y-auto">
       <Navbar />
       <BrowserRouter>
         <Routes>

@@ -33,38 +33,36 @@ const Register = () => {
   };
   return (
     <div className="flex flex-col items-center">
-      <h1 className="text-4xl font-bold mt-48">Register</h1>
+      <h1 className="mt-8 md:mt-48 text-4xl text-[#F3EFE6] font-bold ">
+        Register
+      </h1>
       <form
         onSubmit={handleRegister}
-        className="self-center mt-2  w-1/4 text-3xl text-white flex flex-col items-center bg-black px-2 pb-4 rounded-xl"
+        className="self-center mt-2 w-11/12 md:w-1/2 xl:w-1/4 bg-[#F3EFE6] text-3xl text-[#70351B] flex flex-col items-center px-2 pb-4 rounded-xl"
       >
         <span>Name</span>
         <input
           type="text"
           name="name"
-          placeholder="Your name goes here!"
-          className="w-full text-black text-center rounded"
+          className="w-full bg-[#70351B] text-[#F3EFE6] text-center rounded"
         />
         <span>Email</span>
         <input
           type="email"
           name="email"
-          placeholder="Your e-mail goes here!"
-          className="w-full text-black text-center rounded"
+          className="w-full bg-[#70351B] text-[#F3EFE6] text-center rounded"
         />
         <span>Password</span>
         <input
           type="password"
           name="password"
-          placeholder="Your password goes here!"
-          className="w-full text-black text-center rounded"
+          className="w-full bg-[#70351B] text-[#F3EFE6] text-center rounded"
         />
         <span>Confirm Password</span>
         <input
           type="password"
           name="password2"
-          placeholder="confirm your password here!"
-          className="w-full text-black text-center rounded"
+          className="w-full bg-[#70351B] text-[#F3EFE6] text-center rounded"
         />
         <Link
           to="/login"
@@ -73,12 +71,12 @@ const Register = () => {
           Already have an Account? Click here to Login
         </Link>
         <div className="mt-8 flex gap-4 justify-center font-bold text-2xl">
-          <button className="bg-white hover:bg-gray-300 text-black  px-2 py-1 rounded-xl">
-            Login
+          <button className="bg-[#70351B] hover:bg-[#D87D4A] text-[#F3EFE6]  px-2 py-1 rounded-xl">
+            Register
           </button>
           <button
             type="button"
-            className="bg-white hover:bg-gray-300 text-black px-2 py-1 rounded-xl"
+            className="bg-[#70351B] hover:bg-[#D87D4A] text-[#F3EFE6] px-2 py-1 rounded-xl"
           >
             Cancel
           </button>
