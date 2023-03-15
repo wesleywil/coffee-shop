@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
+
 use App\Models\Reservation;
+use App\Models\Reservation_table;
 
 class ReservationController extends Controller
 {
@@ -12,10 +15,14 @@ class ReservationController extends Controller
      */
     public function index()
     {
-        $reservations = Reservation::all();
-
+        $reservations = $this->when(Gate::allows('view-all-reservations'), function () {
+            return Reservation::all();
+        })->otherwise(function () {
+            return Reservation::where('user_id', auth()->user()->id)->get();
+        });
+    
         return response()->json([
-            'data'=>$reservations
+            'data' => $reservations
         ]);
     }
 
@@ -29,19 +36,31 @@ class ReservationController extends Controller
 
         $validatedData = $request -> validate([
             'table_number' => 'required',
-            'reserve_date' => 'required',
-            'status' => 'required', 
+            'reserve_date' => 'required|date',
+            'table_id' => 'required|exists:reservation_tables,id,status,available', 
         ]);
 
-        // Create new reservation
-        $reserve = new Reservation();
-        $reserve -> table_number = $validatedData['table_number'];
-        $reserve -> reserve_date = $validatedData['reserve_date'];
-        $reserve -> status = $validatedData['status'];
-        $reserve -> user_id = $user_id;
-        $reserve -> save();
+        //Retrieve the selected table
+        $table = Reservation_table::find($validatedData['table_id']);
+        $table-> status = 'occupied';
+        $table->save();
 
-        return response()->json(['message'=> 'Reservatino was created with success!']);
+        //Create a new reservation
+        $reservation = Reservation::create([
+            'user_id' => $user_id,
+            'reserve_date'=> $validatedData['reserve_date'],
+            'status'=>'pending',
+        ]);
+
+        // Associate the seleted table with the reservation
+        $reservation->reservationTable()->associate($table);
+        $reservation->save();
+
+        //Return a response
+        return response()->json([
+            'message'=>'Reservation created successfully.',
+            'reservation'=> $reservation,
+        ], 201);
 
     }
 
@@ -50,15 +69,19 @@ class ReservationController extends Controller
      */
     public function show(string $id)
     {
-        $reserve = Reservation::find($id);
-
-        if(!$reserve){
+        $reservation = $this->when(Gate::allows('view-all-reservations'), function () {
+            return Reservation::with('reservationTable:id,seats')->find($id);
+        })->otherwise(function () use ($id) {
+            return Reservation::with('reservationTable:id,seats')->where('user_id', auth()->user()->id)->find($id);
+        });
+        if(!$reservation){
             return response()->json([
                 'error'=> 'Reservation not found'
             ],404);
         }
         return response()->json([
-            'data' => $reserve
+            'reservation'=>$reservation,
+            'table'=>$reservation->reservationTable,
         ]);
     }
 
@@ -71,7 +94,6 @@ class ReservationController extends Controller
         $user_id = auth()->user()->id;
 
         $validatedData = $request -> validate([
-            'table_number' => 'required',
             'reserve_date' => 'required',
             'status' => 'required'
         ]);
@@ -84,8 +106,13 @@ class ReservationController extends Controller
                 'error'=> 'Reservation not found'
             ],404);
         }
-        
-        $reserve -> table_number = $validatedData['table_number'];
+        if($validatedData['status']== 'closed'){
+            $reserveTable = $reserve->reservationTable;
+            if($reserveTable){
+                $reserveTable->status = 'available';
+                $reserveTable->save();
+            }
+        }
         $reserve -> reserve_date = $validatedData['reserve_date'];
         $reserve -> status = $validatedData['status'];
         $reserve -> save();
