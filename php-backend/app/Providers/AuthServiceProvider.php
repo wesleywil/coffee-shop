@@ -22,8 +22,8 @@ class AuthServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->registerPolicies();
-        
-        Gate::define('view-all-reservations', function($user){
+
+        Gate::define('is_admin', function ($user) {
             return $user->admin;
         });
     }
