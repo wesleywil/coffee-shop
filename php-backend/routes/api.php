@@ -7,6 +7,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\ReserveTableController;
 
 
 /*
@@ -32,13 +33,20 @@ Route::post('/register', [UserController::class, 'register']);
 //Products API
 Route::get('/products', [ProductController::class, 'index']);
 Route::get('/products/{id}', [ProductController::class, 'show']);
-Route::middleware('auth:sanctum')-> post('/products', [ProductController::class, 'store']);
-Route::middleware('auth:sanctum')-> put('/products/{id}', [ProductController::class, 'update']);
-Route::middleware('auth:sanctum')-> delete('/products/{id}', [ProductController::class, 'destroy']);
+Route::middleware('auth:sanctum')->post('/products', [ProductController::class, 'store']);
+Route::middleware('auth:sanctum')->put('/products/{id}', [ProductController::class, 'update']);
+Route::middleware('auth:sanctum')->delete('/products/{id}', [ProductController::class, 'destroy']);
 
 //Reservations API
-Route::middleware('auth:sanctum')-> get('/reservations', [ReservationController::class, 'index']);
-Route::middleware('auth:sanctum')-> get('/reservations/{id}', [ReservationController::class, 'show']);
-Route::middleware('auth:sanctum')-> post('/reservations', [ReservationController::class, 'store']);
-Route::middleware('auth:sanctum')-> put('/reservations/{id}', [ReservationController::class, 'update']);
-Route::middleware('auth:sanctum')-> delete('/reservations/{id}', [ReservationController::class, 'destroy']);
+Route::middleware('auth:sanctum')->get('/reservations', [ReservationController::class, 'index']);
+Route::middleware('auth:sanctum')->get('/reservations/{id}', [ReservationController::class, 'show']);
+Route::middleware('auth:sanctum')->post('/reservations', [ReservationController::class, 'store']);
+Route::middleware('auth:sanctum')->put('/reservations/{id}', [ReservationController::class, 'update']);
+Route::middleware('auth:sanctum')->delete('/reservations/{id}', [ReservationController::class, 'destroy']);
+
+//Tables API
+Route::get('/tables', [ReserveTableController::class, 'index']);
+Route::get('/tables/{id}', [ReserveTableController::class, 'show']);
+Route::middleware('auth:sanctum')->post('/tables', [ReserveTableController::class, 'store']);
+Route::middleware('auth:sanctum')->put('/tables/{id}', [ReserveTableController::class, 'update']);
+Route::middleware('auth:sanctum')->delete('/tables/{id}', [ReserveTableController::class, 'destroy']);
