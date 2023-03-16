@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
 
 use App\Models\Reservation;
-use App\Models\Reservation_table;
+use App\Models\Reserve_table;
 
 class ReservationController extends Controller
 {
@@ -15,12 +15,12 @@ class ReservationController extends Controller
      */
     public function index()
     {
-        $reservations = $this->when(Gate::allows('view-all-reservations'), function () {
+        $reservations = $this->when(Gate::allows('is_admin'), function () {
             return Reservation::all();
         })->otherwise(function () {
             return Reservation::where('user_id', auth()->user()->id)->get();
         });
-    
+
         return response()->json([
             'data' => $reservations
         ]);
@@ -34,22 +34,22 @@ class ReservationController extends Controller
 
         $user_id = auth()->user()->id;
 
-        $validatedData = $request -> validate([
+        $validatedData = $request->validate([
             'table_number' => 'required',
             'reserve_date' => 'required|date',
-            'table_id' => 'required|exists:reservation_tables,id,status,available', 
+            'table_id' => 'required|exists:reservation_tables,id,status,available',
         ]);
 
         //Retrieve the selected table
-        $table = Reservation_table::find($validatedData['table_id']);
-        $table-> status = 'occupied';
+        $table = Reserve_table::find($validatedData['table_id']);
+        $table->status = 'occupied';
         $table->save();
 
         //Create a new reservation
         $reservation = Reservation::create([
             'user_id' => $user_id,
-            'reserve_date'=> $validatedData['reserve_date'],
-            'status'=>'pending',
+            'reserve_date' => $validatedData['reserve_date'],
+            'status' => 'pending',
         ]);
 
         // Associate the seleted table with the reservation
@@ -58,8 +58,8 @@ class ReservationController extends Controller
 
         //Return a response
         return response()->json([
-            'message'=>'Reservation created successfully.',
-            'reservation'=> $reservation,
+            'message' => 'Reservation created successfully.',
+            'reservation' => $reservation,
         ], 201);
 
     }
@@ -69,19 +69,19 @@ class ReservationController extends Controller
      */
     public function show(string $id)
     {
-        $reservation = $this->when(Gate::allows('view-all-reservations'), function () {
+        $reservation = $this->when(Gate::allows('is_admin'), function () use ($id) {
             return Reservation::with('reservationTable:id,seats')->find($id);
         })->otherwise(function () use ($id) {
             return Reservation::with('reservationTable:id,seats')->where('user_id', auth()->user()->id)->find($id);
         });
-        if(!$reservation){
+        if (!$reservation) {
             return response()->json([
-                'error'=> 'Reservation not found'
-            ],404);
+                'error' => 'Reservation not found'
+            ], 404);
         }
         return response()->json([
-            'reservation'=>$reservation,
-            'table'=>$reservation->reservationTable,
+            'reservation' => $reservation,
+            'table' => $reservation->reservationTable,
         ]);
     }
 
@@ -93,7 +93,7 @@ class ReservationController extends Controller
 
         $user_id = auth()->user()->id;
 
-        $validatedData = $request -> validate([
+        $validatedData = $request->validate([
             'reserve_date' => 'required',
             'status' => 'required'
         ]);
@@ -101,27 +101,27 @@ class ReservationController extends Controller
         //Find the reserve by ID...
         $reserve = Reservation::find($id);
 
-        if(!$reserve){
+        if (!$reserve) {
             return response()->json([
-                'error'=> 'Reservation not found'
-            ],404);
+                'error' => 'Reservation not found'
+            ], 404);
         }
-        if($validatedData['status']== 'closed'){
+        if ($validatedData['status'] == 'closed') {
             $reserveTable = $reserve->reservationTable;
-            if($reserveTable){
+            if ($reserveTable) {
                 $reserveTable->status = 'available';
                 $reserveTable->save();
             }
         }
-        $reserve -> reserve_date = $validatedData['reserve_date'];
-        $reserve -> status = $validatedData['status'];
-        $reserve -> save();
+        $reserve->reserve_date = $validatedData['reserve_date'];
+        $reserve->status = $validatedData['status'];
+        $reserve->save();
 
         // Return a response indicating success
         return response()->json([
-            'success'=> true,
-            'message'=> 'Reservation updated successfully.',
-            'data'=> $reserve
+            'success' => true,
+            'message' => 'Reservation updated successfully.',
+            'data' => $reserve
         ]);
     }
 
@@ -132,11 +132,11 @@ class ReservationController extends Controller
     {
         $reserve = Reservation::find($id);
 
-        if($reserve){
+        if ($reserve) {
             $reserve->delete();
-            return response()->json(['message'=> 'Reservation deleted successfully!']);
-        }else{
-            return response()->json(['message'=> 'Reservation not found'],404);
+            return response()->json(['message' => 'Reservation deleted successfully!']);
+        } else {
+            return response()->json(['message' => 'Reservation not found'], 404);
         }
     }
 }
