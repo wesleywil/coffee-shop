@@ -12,6 +12,7 @@ import Catalog from "./pages/catalog/catalog";
 import SignIn from "./pages/signIn/signIn";
 import Register from "./pages/register/register";
 import Profile from "./client/profile/profile";
+import Tables from "./pages/tables/tables";
 
 //Components
 import Navbar from "./components/navbar/navbar.component";
@@ -39,6 +40,7 @@ function App() {
           <Route path="/login" element={<SignIn />} />
           <Route path="/register" element={<Register />} />
           <Route path="/catalog" element={<Catalog />} />
+          <Route path="/tables" element={<Tables />} />
           {/* Client Side Pages */}
           <Route path="/profile" element={<Profile />} />
         </Routes>
