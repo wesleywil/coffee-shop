@@ -1,14 +1,16 @@
 import { configureStore } from "@reduxjs/toolkit";
 import utilsReducer from "./utils/utils";
 import productsReducer from "./products/products";
-import AccountsReducer from "./accounts/accounts";
+import accountsReducer from "./accounts/accounts";
+import tablesReducer from "./tables/tables";
 
 
 export const store = configureStore({
     reducer:{
         utils:utilsReducer,
         products:productsReducer,
-        accounts:AccountsReducer,
+        accounts:accountsReducer,
+        tables:tablesReducer
     }
 });
 
