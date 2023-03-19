@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import api from "../../services/api_config";
 
 export interface User {
   id: number;
@@ -35,45 +35,21 @@ export const registerUser = createAsyncThunk(
     email: string;
     password: string;
   }) => {
-    const config = {
-      headers: { "Content-Type": "application/json" },
-    };
-
-    const res = await axios.post(
-      "http://127.0.0.1:8000/api/register",
-      { name, email, password },
-      config
-    );
+    const res = await api.post("/register", { name, email, password });
     localStorage.setItem("userToken", res.data.data.token);
     return res.data.data.token;
   }
 );
 
 export const getUserInfo = createAsyncThunk("account/getUserInfo", async () => {
-  const userToken = localStorage.getItem("userToken");
-  const config = {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${userToken}`,
-    },
-  };
-
-  const res = await axios.get("http://127.0.0.1:8000/api/user", config);
+  const res = await api.get("/user");
   return res.data;
 });
 
 export const loginUser = createAsyncThunk(
   "account/login",
   async ({ email, password }: { email: string; password: string }) => {
-    const config = {
-      headers: { "Content-Type": "application/json" },
-    };
-
-    const res = await axios.post(
-      "http://127.0.0.1:8000/api/login",
-      { email, password },
-      config
-    );
+    const res = await api.post("/login", { email, password });
     console.log("USER TOKEN FROM LOGIN => ", res.data.token);
     localStorage.setItem("userToken", res.data.token);
     return res.data.token;
