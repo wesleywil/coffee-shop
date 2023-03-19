@@ -11,13 +11,16 @@ import coffeeShopMapImage from "../../assets/tables_template_vertical.png";
 const Tables = () => {
   const tables = useSelector((state: RootState) => state.tables.tables);
   const status = useSelector((state: RootState) => state.tables.status);
+  const select_table_hidden = useSelector(
+    (state: RootState) => state.utils.select_table_hidden
+  );
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     if (status === "idle") {
       dispatch(fetchTables());
     }
-  }, [tables]);
+  }, [tables, select_table_hidden]);
   return (
     <div className="flex flex-col items-center pb-4">
       <div className="mt-8  md:mt-48">
@@ -25,7 +28,7 @@ const Tables = () => {
           Coffee Shop Tables
         </h1>
       </div>
-      <ReserveBox />
+      {select_table_hidden ? "" : <ReserveBox />}
       <div className="mt-2 md:w-11/12 flex flex-col-reverse md:flex-row justify-center gap-2">
         <div className="w-11/12 mx-auto">
           <img
@@ -43,6 +46,7 @@ const Tables = () => {
                 .map((item) => (
                   <TableSelect
                     key={item.id}
+                    id={item.id}
                     seats={item.seats}
                     status={item.status}
                   />

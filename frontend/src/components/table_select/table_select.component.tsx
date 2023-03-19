@@ -1,10 +1,19 @@
+import { useDispatch } from "react-redux";
+import type { AppDispatch } from "../../redux/store";
+import { select_table, set_select_table_hidden } from "../../redux/utils/utils";
+
 type TableSelectProps = {
+  id: number;
   seats: number;
   status: string;
 };
-const TableSelect = ({ seats, status }: TableSelectProps) => {
+const TableSelect = ({ id, seats, status }: TableSelectProps) => {
+  const dispatch = useDispatch<AppDispatch>();
+
   const handleClick = () => {
-    console.log("TEST 123");
+    dispatch(set_select_table_hidden(false));
+    dispatch(select_table({ id, seats }));
+    console.log("TEST ID=> ", id);
   };
   return (
     <button
