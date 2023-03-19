@@ -15,15 +15,20 @@ class ReservationController extends Controller
      */
     public function index()
     {
-        $reservations = $this->when(Gate::allows('is_admin'), function () {
-            return Reservation::all();
-        })->otherwise(function () {
-            return Reservation::where('user_id', auth()->user()->id)->get();
-        });
 
-        return response()->json([
-            'data' => $reservations
-        ]);
+        if (Gate::allows('is_admin')) {
+            $reservations = Reservation::all();
+            return response()->json(['data' => $reservations]);
+        }
+        try {
+            $reservations = Reservation::where('user_id', auth()->user()->id)->get();
+            return response()->json(['data' => $reservations]);
+        } catch (error) {
+            return response()->json([
+                'status' => 401,
+                'message' => 'Unauthorized',
+            ], 401);
+        }
     }
 
     /**
@@ -35,9 +40,8 @@ class ReservationController extends Controller
         $user_id = auth()->user()->id;
 
         $validatedData = $request->validate([
-            'table_number' => 'required',
             'reserve_date' => 'required|date',
-            'table_id' => 'required|exists:reservation_tables,id,status,available',
+            'table_id' => 'required|exists:reserve_tables,id,status,available',
         ]);
 
         //Retrieve the selected table
@@ -50,6 +54,7 @@ class ReservationController extends Controller
             'user_id' => $user_id,
             'reserve_date' => $validatedData['reserve_date'],
             'status' => 'pending',
+            'reserve_tables_id' => $validatedData['table_id']
         ]);
 
         // Associate the seleted table with the reservation
@@ -69,19 +74,22 @@ class ReservationController extends Controller
      */
     public function show(string $id)
     {
-        $reservation = $this->when(Gate::allows('is_admin'), function () use ($id) {
-            return Reservation::with('reservationTable:id,seats')->find($id);
-        })->otherwise(function () use ($id) {
-            return Reservation::with('reservationTable:id,seats')->where('user_id', auth()->user()->id)->find($id);
-        });
+        if (Gate::allows('is_admin')) {
+            $reservation = Reservation::with('reservationTable:id,seats')->find($id);
+        } else {
+            $reservation = Reservation::with('reservationTable:id,seats')
+                ->where('user_id', auth()->user()->id)
+                ->find($id);
+        }
+
         if (!$reservation) {
             return response()->json([
                 'error' => 'Reservation not found'
             ], 404);
         }
+
         return response()->json([
-            'reservation' => $reservation,
-            'table' => $reservation->reservationTable,
+            'reservation' => $reservation
         ]);
     }
 
