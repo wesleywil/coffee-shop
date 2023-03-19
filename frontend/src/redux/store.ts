@@ -3,6 +3,7 @@ import utilsReducer from "./utils/utils";
 import productsReducer from "./products/products";
 import accountsReducer from "./accounts/accounts";
 import tablesReducer from "./tables/tables";
+import reservationsReducer from "./reservations/reservations";
 
 
 export const store = configureStore({
@@ -10,7 +11,8 @@ export const store = configureStore({
         utils:utilsReducer,
         products:productsReducer,
         accounts:accountsReducer,
-        tables:tablesReducer
+        tables:tablesReducer,
+        reservations:reservationsReducer,
     }
 });
 
