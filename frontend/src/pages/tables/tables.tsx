@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../redux/store";
 import { fetchTables } from "../../redux/tables/tables";
+import { set_default_status } from "../../redux/reservations/reservations";
 
 import TableSelect from "../../components/table_select/table_select.component";
 import ReserveBox from "../../components/reserve_box/reserve_box.component";
@@ -11,16 +12,26 @@ import coffeeShopMapImage from "../../assets/tables_template_vertical.png";
 const Tables = () => {
   const tables = useSelector((state: RootState) => state.tables.tables);
   const status = useSelector((state: RootState) => state.tables.status);
+  const created_status = useSelector(
+    (state: RootState) => state.reservations.status
+  );
   const select_table_hidden = useSelector(
     (state: RootState) => state.utils.select_table_hidden
   );
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    if (status === "idle") {
+    console.log("AAH");
+    console.log("STATUS RESERVATION => ", created_status);
+    if (
+      created_status === "succeeded in creating a new reservation" ||
+      status === "idle"
+    ) {
+      dispatch(set_default_status());
       dispatch(fetchTables());
     }
-  }, [tables, select_table_hidden]);
+  }, [tables, select_table_hidden, status, created_status]);
+
   return (
     <div className="flex flex-col items-center pb-4">
       <div className="mt-8  md:mt-48">

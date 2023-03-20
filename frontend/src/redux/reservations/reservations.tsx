@@ -71,7 +71,11 @@ export const deleteReservation = createAsyncThunk(
 export const reservationsSlice = createSlice({
   name: "reservations",
   initialState,
-  reducers: {},
+  reducers: {
+    set_default_status: (state) => {
+      state.status = "idle";
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchReservations.pending, (state) => {
@@ -116,6 +120,6 @@ export const reservationsSlice = createSlice({
   },
 });
 
-export const {} = reservationsSlice.actions;
+export const { set_default_status } = reservationsSlice.actions;
 
 export default reservationsSlice.reducer;
