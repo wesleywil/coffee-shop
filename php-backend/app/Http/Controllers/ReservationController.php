@@ -40,9 +40,11 @@ class ReservationController extends Controller
         $user_id = auth()->user()->id;
 
         $validatedData = $request->validate([
-            'reserve_date' => 'required|date',
+            'reserve_date' => 'required|date|not_on_same_day',
             'table_id' => 'required|exists:reserve_tables,id,status,available',
-        ]);
+        ], [
+                'not_on_same_day' => 'You already have a reservation on the selected date.'
+            ]);
 
         //Retrieve the selected table
         $table = Reserve_table::find($validatedData['table_id']);
