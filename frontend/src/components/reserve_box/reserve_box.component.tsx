@@ -11,6 +11,7 @@ const ReserveBox = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
     const data = {
       reserve_date: today,
       table_id: reserve.id,
