@@ -4,6 +4,7 @@ import productsReducer from "./products/products";
 import accountsReducer from "./accounts/accounts";
 import tablesReducer from "./tables/tables";
 import reservationsReducer from "./reservations/reservations";
+import cartReducer from "./cart/cart";
 
 
 export const store = configureStore({
@@ -13,6 +14,7 @@ export const store = configureStore({
         accounts:accountsReducer,
         tables:tablesReducer,
         reservations:reservationsReducer,
+        cart:cartReducer
     }
 });
 
