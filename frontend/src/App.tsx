@@ -33,8 +33,8 @@ function App() {
 
   return (
     <div className="bg-[#4F2B1D] h-screen min-h-full w-screen overflow-y-auto">
-      <Navbar />
       <BrowserRouter>
+        <Navbar />
         <Routes>
           <Route path="/" element={<Homepage />} />
           <Route path="/login" element={<SignIn />} />

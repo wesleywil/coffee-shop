@@ -1,6 +1,15 @@
-import { FaCoffee } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+import type { AppDispatch, RootState } from "../../redux/store";
+import { Link } from "react-router-dom";
+import { FaCoffee, FaShoppingCart } from "react-icons/fa";
+
+import { switch_hidden } from "../../redux/cart/cart";
+
+import Cart from "../cart/cart.component";
 
 const Navbar = () => {
+  const hidden = useSelector((state: RootState) => state.cart.hidden);
+  const dispatch = useDispatch<AppDispatch>();
   return (
     <nav className="bg-[#F3EFE6] shadow shadow-[#D87D4A] w-100 px-8 md:px-auto">
       <div className="md:h-16 h-28 mx-auto md:px-4 container flex items-center justify-between flex-wrap md:flex-nowrap">
@@ -12,23 +21,17 @@ const Navbar = () => {
         <div className="text-[#70351B] order-3 w-full md:w-auto md:order-2">
           <ul className="flex font-semibold justify-between">
             <li className="md:px-4 md:py-2 hover:text-[#D87D4A]">
-              <a href="#">Dashboard</a>
+              <Link to="/">Home</Link>
             </li>
             <li className="md:px-4 md:py-2 hover:text-[#D87D4A]">
-              <a href="#">Search</a>
+              <Link to="/catalog">Catalog</Link>
             </li>
             <li className="md:px-4 md:py-2 hover:text-[#D87D4A]">
-              <a href="#">Explore</a>
-            </li>
-            <li className="md:px-4 md:py-2 hover:text-[#D87D4A]">
-              <a href="#">About</a>
-            </li>
-            <li className="md:px-4 md:py-2 hover:text-[#D87D4A]">
-              <a href="#">Contact</a>
+              <Link to="/tables">Tables</Link>
             </li>
           </ul>
         </div>
-        <div className="order-2 md:order-3">
+        <div className="order-2 md:order-3 flex gap-2">
           <button className="px-4 py-2 bg-[#D87D4A] hover:bg-[#70351B] text-gray-50 rounded-xl flex items-center gap-2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -42,10 +45,19 @@ const Navbar = () => {
                 clipRule="evenodd"
               />
             </svg>
-            <span>Login</span>
+            <Link to="/login">Login</Link>
+          </button>
+          <button
+            onClick={() => dispatch(switch_hidden())}
+            className="px-4 py-2 bg-[#D87D4A] hover:bg-[#70351B] text-gray-50 rounded-xl flex items-center gap-2"
+          >
+            <span>
+              <FaShoppingCart />
+            </span>
           </button>
         </div>
       </div>
+      {hidden ? "" : <Cart />}
     </nav>
   );
 };
