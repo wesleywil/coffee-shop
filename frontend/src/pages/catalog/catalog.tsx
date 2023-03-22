@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState, AppDispatch } from "../../redux/store";
 import { fetchProducts } from "../../redux/products/products";
+import { add_to_cart } from "../../redux/cart/cart";
 
 import CatalogCategories from "../../components/catalog_categories/catalog_categories.component";
 import CatalogItem from "../../components/catalog_item/catalog_item.component";
@@ -42,6 +43,9 @@ const Catalog = () => {
                     title={item.title}
                     price={item.price}
                     description={item.description}
+                    handleClick={() => {
+                      dispatch(add_to_cart({ product: item, quantity: 1 }));
+                    }}
                   />
                 ))
               ) : (

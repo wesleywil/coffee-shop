@@ -4,9 +4,15 @@ type CatalogItemType = {
   title: string;
   price: number;
   description: string;
+  handleClick: any;
 };
 
-const CatalogItem = ({ title, price, description }: CatalogItemType) => {
+const CatalogItem = ({
+  title,
+  price,
+  description,
+  handleClick,
+}: CatalogItemType) => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -28,7 +34,10 @@ const CatalogItem = ({ title, price, description }: CatalogItemType) => {
       >
         <h2 className="text-2xl font-bold">Description</h2>
         <p className="p-2">{description}</p>
-        <button className="w-full bg-[#D87D4A] hover:bg-[#70351B] text-[#F3EFE6] font-bold mb-2 px-2 py-1 rounded-xl">
+        <button
+          onClick={handleClick}
+          className="w-full bg-[#D87D4A] hover:bg-[#70351B] text-[#F3EFE6] font-bold mb-2 px-2 py-1 rounded-xl"
+        >
           Order
         </button>
       </div>
