@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
 
 use App\Models\Product;
@@ -15,8 +16,8 @@ class ProductController extends Controller
     {
         $products = Product::all();
 
-        return response()-> json([
-            'data'=>$products
+        return response()->json([
+            'data' => $products
         ]);
     }
 
@@ -25,7 +26,7 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $request -> validate([
+        $validatedData = $request->validate([
             'title' => 'required|max:255',
             'description' => 'required|string',
             'image' => 'required|max:255',
@@ -33,17 +34,23 @@ class ProductController extends Controller
             'category' => 'required|string',
         ]);
 
-        // Create a new product with the validated data
-        $product = new Product();
-        $product-> title = $validatedData['title'];
-        $product-> description = $validatedData['description'];
-        $product-> image = $validatedData['image'];
-        $product-> price = $validatedData['price'];
-        $product-> category = $validatedData['category'];
-        $product-> save();
+        if (Gate::allows('is_admin')) {
+            // Create a new product with the validated data
+            $product = new Product();
+            $product->title = $validatedData['title'];
+            $product->description = $validatedData['description'];
+            $product->image = $validatedData['image'];
+            $product->price = $validatedData['price'];
+            $product->category = $validatedData['category'];
+            $product->save();
 
-        // Return a response indicating success
-        return response()-> json(['message' => 'Product created successfully!'],201);
+            // Return a response indicating success
+            return response()->json(['message' => 'Product created successfully!'], 201);
+        }
+        return response()->json([
+            'status' => 401,
+            'message' => 'Unauthorized'
+        ], 401);
     }
 
     /**
@@ -53,10 +60,10 @@ class ProductController extends Controller
     {
         $product = Product::find($id);
 
-        if(!$product){
+        if (!$product) {
             return response()->json([
-                'error'=> 'Product not found'
-            ],404);
+                'error' => 'Product not found'
+            ], 404);
         }
         return response()->json([
             'data' => $product
@@ -69,7 +76,7 @@ class ProductController extends Controller
     public function update(Request $request, string $id)
     {
 
-        $validatedData = $request -> validate([
+        $validatedData = $request->validate([
             'title' => 'required|max:255',
             'description' => 'required|string',
             'image' => 'required|max:255',
@@ -77,27 +84,33 @@ class ProductController extends Controller
             'category' => 'required|string',
         ]);
 
-        //Find the product by ID...
-        $product = Product::find($id);
+        if (Gate::allows('is_admin')) {
+            //Find the product by ID...
+            $product = Product::find($id);
 
-        if(!$product){
+            if (!$product) {
+                return response()->json([
+                    'error' => 'Product not found'
+                ], 404);
+            }
+            $product->title = $validatedData['title'];
+            $product->description = $validatedData['description'];
+            $product->image = $validatedData['image'];
+            $product->price = $validatedData['price'];
+            $product->category = $validatedData['category'];
+            $product->save();
+
+            // Return a response indicating success
             return response()->json([
-                'error'=> 'Product not found'
-            ],404);
+                'success' => true,
+                'message' => 'Product updated successfully.',
+                'data' => $product
+            ]);
         }
-        $product-> title = $validatedData['title'];
-        $product-> description = $validatedData['description'];
-        $product-> image = $validatedData['image'];
-        $product-> price = $validatedData['price'];
-        $product-> category = $validatedData['category'];
-        $product-> save();
-
-        // Return a response indicating success
         return response()->json([
-            'success'=> true,
-            'message'=> 'Product updated successfully.',
-            'data'=> $product
-        ]);
+            'status' => 401,
+            'message' => 'Unauthorized'
+        ], 401);
     }
 
     /**
@@ -105,14 +118,19 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        $product = Product::find($id);
+        if (Gate::allows('is_admin')) {
+            $product = Product::find($id);
 
-        if($product){
-            $product->delete();
-            return response()->json(['message'=> 'Product deleted successfully!']);
-        }else{
-            return response()->json(['message'=> 'Product not found'],404);
+            if ($product) {
+                $product->delete();
+                return response()->json(['message' => 'Product deleted successfully!']);
+            } else {
+                return response()->json(['message' => 'Product not found'], 404);
+            }
         }
-
+        return response()->json([
+            'status' => 401,
+            'message' => 'Unauthorized'
+        ], 401);
     }
 }
