@@ -13,6 +13,7 @@ import SignIn from "./pages/signIn/signIn";
 import Register from "./pages/register/register";
 import Profile from "./client/profile/profile";
 import Tables from "./pages/tables/tables";
+import Order from "./pages/order/order";
 
 //Components
 import Navbar from "./components/navbar/navbar.component";
@@ -41,6 +42,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/catalog" element={<Catalog />} />
           <Route path="/tables" element={<Tables />} />
+          <Route path="/order" element={<Order />} />
           {/* Client Side Pages */}
           <Route path="/profile" element={<Profile />} />
         </Routes>
