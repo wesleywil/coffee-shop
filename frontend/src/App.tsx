@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 // Redux
 import { getUserInfo } from "./redux/accounts/accounts";
+import { getTodaysReservation } from "./redux/reservations/reservations";
 
 //Pages
 import Homepage from "./pages/homepage/homepage";
@@ -17,6 +18,7 @@ import Order from "./pages/order/order";
 
 //Components
 import Navbar from "./components/navbar/navbar.component";
+import WithReservation from "./components/withReservation/withReservation.component";
 
 //Styles
 import "./App.css";
@@ -30,6 +32,11 @@ function App() {
     if (status_user === "idle") {
       dispatch(getUserInfo());
     }
+    try {
+      dispatch(getTodaysReservation());
+    } catch (error) {
+      console.log("ERROR IN TRYING TO GET RESERVATION OF TODAY", error);
+    }
   }, []);
 
   return (
@@ -42,7 +49,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/catalog" element={<Catalog />} />
           <Route path="/tables" element={<Tables />} />
-          <Route path="/order" element={<Order />} />
+          <Route path="/order" element={WithReservation(Order)} />
           {/* Client Side Pages */}
           <Route path="/profile" element={<Profile />} />
         </Routes>

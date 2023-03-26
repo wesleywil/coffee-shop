@@ -11,6 +11,7 @@ export interface Reservation {
 export interface ReservationState {
   reservations: Array<Reservation>;
   reserve: Reservation;
+  today_reservation: Reservation;
   status: string;
   error: any;
 }
@@ -18,6 +19,7 @@ export interface ReservationState {
 const initialState: ReservationState = {
   reservations: [],
   reserve: {} as Reservation,
+  today_reservation: {} as Reservation,
   status: "idle",
   error: null,
 };
@@ -27,6 +29,14 @@ export const fetchReservations = createAsyncThunk(
   async () => {
     const res = await api.get("/reservations");
     return res.data.data;
+  }
+);
+
+export const getTodaysReservation = createAsyncThunk(
+  "reservations/getTodaysReservation",
+  async () => {
+    const res = await api.get("/reservations/today");
+    return res.data;
   }
 );
 
@@ -87,6 +97,16 @@ export const reservationsSlice = createSlice({
       })
       .addCase(fetchReservations.rejected, (state) => {
         state.error = "error";
+      })
+      .addCase(getTodaysReservation.pending, (state) => {
+        state.status = "trying to get reservation open reservation";
+      })
+      .addCase(getTodaysReservation.fulfilled, (state, { payload }) => {
+        state.status = "succeeded in retrieving today's reservation";
+        state.reserve = payload;
+      })
+      .addCase(getTodaysReservation.rejected, (state) => {
+        state.error = "error in trying to get reservation of today";
       })
       .addCase(createReservation.pending, (state) => {
         state.status = "reserving...";
