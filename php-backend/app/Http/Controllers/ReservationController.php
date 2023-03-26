@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
 
@@ -89,6 +90,21 @@ class ReservationController extends Controller
                 'error' => 'Reservation not found'
             ], 404);
         }
+
+        return response()->json([
+            'reservation' => $reservation
+        ]);
+    }
+
+    public function getTodaysReservation(Request $request)
+    {
+        $user_id = $request->user()->id;
+        $today = Carbon::today()->toDateString();
+
+        $reservation = Reservation::where('user_id', $user_id)
+            ->where('reserve_date', $today)
+            ->where('status', 'aproved')
+            ->first();
 
         return response()->json([
             'reservation' => $reservation

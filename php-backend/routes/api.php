@@ -40,6 +40,7 @@ Route::middleware('auth:sanctum')->delete('/products/{id}', [ProductController::
 //Reservations API
 Route::middleware('auth:sanctum')->get('/reservations', [ReservationController::class, 'index']);
 Route::middleware('auth:sanctum')->get('/reservations/{id}', [ReservationController::class, 'show']);
+Route::middleware('auth:sanctum')->get('/reservations/today', [ReservationController::class, 'getTodaysReservation']);
 Route::middleware('auth:sanctum')->post('/reservations', [ReservationController::class, 'store']);
 Route::middleware('auth:sanctum')->put('/reservations/{id}', [ReservationController::class, 'update']);
 Route::middleware('auth:sanctum')->delete('/reservations/{id}', [ReservationController::class, 'destroy']);
