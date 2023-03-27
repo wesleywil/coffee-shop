@@ -11,14 +11,15 @@ use App\Models\CartItem;
 class Order extends Model
 {
     protected $fillable = [
-        'reserve_id',
+        'user_id',
+        'reservation_id',
         'total',
         'status'
     ];
 
-    public function toReservation()
+    public function orderingReservation()
     {
-        return $this->belongsTo(Reservation::class, 'reserve_id');
+        return $this->belongsTo(Reservation::class, 'reservation_id');
     }
 
     public function cartItems()
