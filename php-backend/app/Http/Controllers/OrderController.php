@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 
+
 use Illuminate\Http\Request;
 
 use App\Models\Order;
 use App\Models\Reservation;
+use App\Models\Product;
 use App\Models\CartItem;
 
 class OrderController extends Controller
@@ -37,24 +39,27 @@ class OrderController extends Controller
 
         $order = Order::create([
             'user_id' => $user_id,
-            'reserve_id' => $validatedData['reserve_id'],
+            'reservation_id' => $validatedData['reserve_id'],
             'status' => 'placed',
+            'total' => 0,
         ]);
 
         $total = 0;
 
-        foreach ($request->validatedData('cart_items') as $item) {
+        foreach ($validatedData['cart_items'] as $item) {
+            $product = Product::find($item['product_id']);
             $cartItem = new CartItem([
+                'order_id' => $order->id,
                 'product_id' => $item['product_id'],
                 'quantity' => $item['quantity'],
             ]);
-
-            $total += $cartItem->product->price * $cartItem->quantity;
+            $cartItem->save();
+            $total += $product->price * $cartItem->quantity;
             $order->cartItems()->save($cartItem);
         }
 
         $order->total = $total;
-        $order->toReservation()->associate($reservation);
+        $order->orderingReservation()->associate($reservation);
         $order->save();
 
         return response()->json(['message' => 'Order created successfully'], 201);
