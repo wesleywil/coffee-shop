@@ -75,6 +75,22 @@ class ReservationController extends Controller
     /**
      * Display the specified resource.
      */
+
+    public function getTodaysReservation(Request $request)
+    {
+        $user_id = $request->user()->id;
+        $today = Carbon::today()->toDateString();
+
+        $reservation = Reservation::where('user_id', $user_id)
+            ->where('reserve_date', $today)
+            ->where('status', 'aproved')
+            ->first();
+
+        return response()->json([
+            'reservation' => $reservation
+        ]);
+    }
+
     public function show(string $id)
     {
         if (Gate::allows('is_admin')) {
@@ -96,20 +112,6 @@ class ReservationController extends Controller
         ]);
     }
 
-    public function getTodaysReservation(Request $request)
-    {
-        $user_id = $request->user()->id;
-        $today = Carbon::today()->toDateString();
-
-        $reservation = Reservation::where('user_id', $user_id)
-            ->where('reserve_date', $today)
-            ->where('status', 'aproved')
-            ->first();
-
-        return response()->json([
-            'reservation' => $reservation
-        ]);
-    }
 
     /**
      * Update the specified resource in storage.
