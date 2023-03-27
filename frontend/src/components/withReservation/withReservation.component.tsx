@@ -3,19 +3,24 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { Navigate } from "react-router-dom";
 
-function WithReservation<T>(Component: ComponentType, hocProps?: any) {
+function WithReservation(Component: ComponentType, hocProps?: any) {
   const today_reservation = useSelector(
     (state: RootState) => state.reservations.today_reservation
   );
-
+  const status = useSelector(
+    (state: RootState) => state.reservations.status_today
+  );
   useEffect(() => {
     console.log("With Reservation Effect!", today_reservation);
-  }, [today_reservation]);
+  }, [today_reservation, status]);
 
-  if (Object.keys(today_reservation).length !== 0) {
-    return <Component {...hocProps} />;
+  if (status === "idle") {
+    return <h1 className="text-white text-center text-3xl">Loading...</h1>;
   } else {
-    return <Navigate to="/" replace={true} />;
+    if (status === "empty reservation") {
+      return <Navigate to="/" replace={true} />;
+    }
+    return <Component {...hocProps} />;
   }
 }
 
