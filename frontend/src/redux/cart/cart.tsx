@@ -9,21 +9,28 @@ export interface CartProduct {
 export interface CartState {
   cart_products: Array<CartProduct>;
   total: number;
-  hidden: boolean;
+  hidden_cart: boolean;
+  hidden_menu: boolean;
 }
 
 const initialState: CartState = {
   cart_products: [],
   total: 0.0,
-  hidden: true,
+  hidden_cart: true,
+  hidden_menu: true,
 };
 
 export const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
-    switch_hidden: (state) => {
-      state.hidden = !state.hidden;
+    switch_hidden_cart: (state) => {
+      state.hidden_cart = !state.hidden_cart;
+      state.hidden_menu = true;
+    },
+    switch_hidden_menu: (state) => {
+      state.hidden_menu = !state.hidden_menu;
+      state.hidden_cart = true;
     },
     add_to_cart: (state, { payload }) => {
       const item = state.cart_products.find(
@@ -81,7 +88,8 @@ export const cartSlice = createSlice({
 });
 
 export const {
-  switch_hidden,
+  switch_hidden_cart,
+  switch_hidden_menu,
   add_to_cart,
   set_cart_total,
   add_quantity,
