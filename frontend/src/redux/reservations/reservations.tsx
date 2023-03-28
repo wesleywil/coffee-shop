@@ -104,11 +104,18 @@ export const reservationsSlice = createSlice({
         state.status_today = "trying to get reservation open reservation";
       })
       .addCase(getTodaysReservation.fulfilled, (state, { payload }) => {
-        if (typeof payload === "object" && Object.keys(payload).length === 0) {
+        if (payload === null) {
           state.status_today = "empty reservation";
         } else {
-          state.status_today = "succeeded in retrieving today's reservation";
-          state.today_reservation = payload;
+          if (
+            typeof payload === "object" &&
+            Object.keys(payload).length === 0
+          ) {
+            state.status_today = "empty reservation";
+          } else {
+            state.status_today = "succeeded in retrieving today's reservation";
+            state.today_reservation = payload;
+          }
         }
       })
       .addCase(getTodaysReservation.rejected, (state) => {
