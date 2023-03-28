@@ -33,8 +33,7 @@ const Order = () => {
     if (order.cart_items.length === 0) {
       console.log("THIS EMPTY");
     } else {
-      //dispatch(createOrder(order));
-      console.log("ORDER => ", order);
+      dispatch(createOrder(order));
     }
   };
 
@@ -64,11 +63,6 @@ const Order = () => {
               NO ITEMS BEING ORDERED
             </h1>
           )}
-          {/* <OrderItem />
-          <OrderItem />
-          <OrderItem />
-          <OrderItem />
-          <OrderItem /> */}
         </div>
         <div className="text-center text-4xl text-[#F3EFE6] font-bold">
           <h1>Total</h1>
