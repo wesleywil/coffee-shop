@@ -53,7 +53,7 @@ function App() {
           <Route path="/order" element={WithReservation(Order)} />
           {/* Client Side Pages */}
           <Route path="/profile" element={<Profile />} />
-          <Route path="/order_status" element={<MyOrders />} />
+          <Route path="/myorders" element={<MyOrders />} />
         </Routes>
       </BrowserRouter>
     </div>
