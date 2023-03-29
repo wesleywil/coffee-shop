@@ -68,6 +68,20 @@ class OrderController extends Controller
     /**
      * Display the specified resource.
      */
+    public function getOrdersByReservationId($reservationId)
+    {
+        $orders = Order::where('reservation_id', $reservationId)->get();
+
+        if (!$orders) {
+            return response()->json([
+                'error' => 'No Orders Found!'
+            ], 404);
+        }
+        return response()->json([
+            'orders' => $orders
+        ], 201);
+
+    }
     public function show(string $id)
     {
         //
