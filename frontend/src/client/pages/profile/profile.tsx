@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import type { RootState } from "../../redux/store";
+import type { RootState } from "../../../redux/store";
 
 const Profile = () => {
   const user = useSelector((state: RootState) => state.accounts.user);

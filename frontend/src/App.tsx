@@ -12,9 +12,10 @@ import Homepage from "./pages/homepage/homepage";
 import Catalog from "./pages/catalog/catalog";
 import SignIn from "./pages/signIn/signIn";
 import Register from "./pages/register/register";
-import Profile from "./client/profile/profile";
+import Profile from "./client/pages/profile/profile";
 import Tables from "./pages/tables/tables";
 import Order from "./pages/order/order";
+import MyOrders from "./client/pages/my_orders/my_orders";
 
 //Components
 import Navbar from "./components/navbar/navbar.component";
@@ -52,6 +53,7 @@ function App() {
           <Route path="/order" element={WithReservation(Order)} />
           {/* Client Side Pages */}
           <Route path="/profile" element={<Profile />} />
+          <Route path="/order_status" element={<MyOrders />} />
         </Routes>
       </BrowserRouter>
     </div>
