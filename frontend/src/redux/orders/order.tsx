@@ -7,6 +7,7 @@ export interface Order {
   cart_items: Array<{ product_id: number; quantity: number }>;
   total?: number;
   status?: string;
+  created_at?: string;
 }
 
 export interface OrderState {
@@ -37,6 +38,15 @@ export const createOrder = createAsyncThunk(
   }
 );
 
+export const getAllOrdersByReservationId = createAsyncThunk(
+  "orders/getAllOrdersByReservationId",
+  async (id: number) => {
+    const res = await api.get(`/myorders/${id}`);
+    console.log("RESERVATION ID", id + " ORDERS ->", res.data);
+    return res.data.orders;
+  }
+);
+
 export const ordersSlice = createSlice({
   name: "orders",
   initialState,
@@ -51,6 +61,16 @@ export const ordersSlice = createSlice({
       })
       .addCase(createOrder.rejected, (state) => {
         state.status = "error in creating a new order";
+      })
+      .addCase(getAllOrdersByReservationId.pending, (state) => {
+        state.status = "loading orders";
+      })
+      .addCase(getAllOrdersByReservationId.fulfilled, (state, { payload }) => {
+        state.status = "succeeded";
+        state.orders = payload;
+      })
+      .addCase(getAllOrdersByReservationId.rejected, (state) => {
+        state.status = "error";
       });
   },
 });
