@@ -70,7 +70,7 @@ class OrderController extends Controller
      */
     public function getOrdersByReservationId($reservationId)
     {
-        $orders = Order::where('reservation_id', $reservationId)->get();
+        $orders = Order::select('id', 'user_id', 'reservation_id', 'total', 'status')->where('reservation_id', $reservationId)->with('cartItems.product')->get();
 
         if (!$orders) {
             return response()->json([
