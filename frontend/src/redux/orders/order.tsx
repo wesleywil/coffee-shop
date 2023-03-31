@@ -1,10 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../../services/api_config";
+import { Product } from "../products/products";
 
 export interface Order {
   id?: number;
   reserve_id: number;
-  cart_items: Array<{ product_id: number; quantity: number }>;
+  cart_items: Array<{ product_id: number; quantity: number; product: Product }>;
   total?: number;
   status?: string;
   created_at?: string;
@@ -13,6 +14,7 @@ export interface Order {
 export interface OrderState {
   orders: Array<Order>;
   make_order: Order;
+  selected_order: Order;
   status: string;
   error: any;
 }
@@ -20,6 +22,7 @@ export interface OrderState {
 const initialState: OrderState = {
   orders: [],
   make_order: {} as Order,
+  selected_order: {} as Order,
   status: "idle",
   error: null,
 };
@@ -47,6 +50,15 @@ export const getAllOrdersByReservationId = createAsyncThunk(
   }
 );
 
+export const getOrderById = createAsyncThunk(
+  "orders/getOrderById",
+  async (id: number) => {
+    const res = await api.get(`/orders/${id}`);
+    console.log("ORDER => ", res.data.data);
+    return res.data.data;
+  }
+);
+
 export const ordersSlice = createSlice({
   name: "orders",
   initialState,
@@ -71,6 +83,16 @@ export const ordersSlice = createSlice({
       })
       .addCase(getAllOrdersByReservationId.rejected, (state) => {
         state.status = "error";
+      })
+      .addCase(getOrderById.pending, (state) => {
+        state.status = "loading order by id";
+      })
+      .addCase(getOrderById.fulfilled, (state, { payload }) => {
+        state.status = "succeeded in getting order by id";
+        state.selected_order = payload;
+      })
+      .addCase(getOrderById.rejected, (state) => {
+        state.status = "error in getting order by id";
       });
   },
 });
