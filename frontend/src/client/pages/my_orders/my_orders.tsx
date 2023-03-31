@@ -4,6 +4,7 @@ import type { AppDispatch, RootState } from "../../../redux/store";
 import { getAllOrdersByReservationId } from "../../../redux/orders/order";
 
 import OrderCard from "../../components/order_card/order_card.component";
+import OrderDetails from "../../components/order_details/order_details.component";
 
 const MyOrders = () => {
   const reservation_id = useSelector(
@@ -11,6 +12,9 @@ const MyOrders = () => {
   );
   const myOrders = useSelector((state: RootState) => state.orders.orders);
   const status = useSelector((state: RootState) => state.orders.status);
+  const hidden = useSelector(
+    (state: RootState) => state.utils.order_details_hidden
+  );
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
@@ -24,6 +28,8 @@ const MyOrders = () => {
   }, [status, myOrders, reservation_id]);
   return (
     <div className="mt-24 text-center">
+      {hidden ? "" : <OrderDetails />}
+
       <h1 className="text-2xl text-[#F3EFE6] font-bold text-center mb-2">
         My Orders
       </h1>
@@ -33,16 +39,13 @@ const MyOrders = () => {
           ? myOrders.map((item) => (
               <OrderCard
                 key={item.id}
+                id={item.id!}
                 created_at={item.created_at!}
                 status={item.status!}
                 total={item.total!}
               />
             ))
           : "NO ORDERS"}
-        {/* <OrderCard />
-        <OrderCard />
-        <OrderCard />
-        <OrderCard /> */}
       </div>
     </div>
   );
