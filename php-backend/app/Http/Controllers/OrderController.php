@@ -84,7 +84,17 @@ class OrderController extends Controller
     }
     public function show(string $id)
     {
-        //
+        $order = Order::where('id', $id)->with('cartItems.product')->first();
+
+        if (!$order) {
+            return response()->json([
+                'error' => 'Order was not found'
+            ], 404);
+        }
+        return response()->json([
+            'data' => $order
+        ]);
+
     }
 
     /**

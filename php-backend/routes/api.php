@@ -56,3 +56,4 @@ Route::middleware('auth:sanctum')->delete('/tables/{id}', [ReserveTableControlle
 //Orders API
 Route::middleware('auth:sanctum')->post('/orders', [OrderController::class, 'store']);
 Route::middleware('auth:sanctum')->get('/myorders/{reservationId}', [OrderController::class, 'getOrdersByReservationId']);
+Route::middleware('auth:sanctum')->get('/orders/{id}', [OrderController::class, 'show']);
