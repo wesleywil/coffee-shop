@@ -9,6 +9,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\ReserveTableController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PaymentController;
 
 
 /*
@@ -57,3 +58,6 @@ Route::middleware('auth:sanctum')->delete('/tables/{id}', [ReserveTableControlle
 Route::middleware('auth:sanctum')->post('/orders', [OrderController::class, 'store']);
 Route::middleware('auth:sanctum')->get('/myorders/{reservationId}', [OrderController::class, 'getOrdersByReservationId']);
 Route::middleware('auth:sanctum')->get('/orders/{id}', [OrderController::class, 'show']);
+
+// Payments API
+Route::middleware('auth:sanctum')->post('/payment', [PaymentController::class, 'payment']);
