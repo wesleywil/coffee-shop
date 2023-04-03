@@ -1,11 +1,15 @@
-import {
-  useStripe,
-  useElements,
-  PaymentElement,
-} from "@stripe/react-stripe-js";
+import { useSelector } from "react-redux";
+import type { RootState } from "../../redux/store";
+import { useStripe, useElements, CardElement } from "@stripe/react-stripe-js";
+import { StripeCardElement } from "@stripe/stripe-js";
+import api from "../../services/api_config";
+
 import PaymentOrder from "../../components/payment_order/payment_order.component";
 
 const Payment = () => {
+  const order_id = useSelector(
+    (state: RootState) => state.orders.selected_order.id
+  );
   const stripe = useStripe();
   const elements = useElements();
 
@@ -16,17 +20,50 @@ const Payment = () => {
       return;
     }
 
-    const result = await stripe.confirmPayment({
-      elements,
-      confirmParams: {
-        return_url: "",
-      },
-    });
+    const cardElement =
+      (elements.getElement("card") as StripeCardElement) || null;
 
-    if (result.error) {
-      console.log(result.error.message);
-    } else {
+    if (!cardElement) {
+      return;
     }
+
+    const { error, token } = await stripe.createToken(cardElement);
+
+    if (error) {
+      console.log("Error=> ", error);
+    } else {
+      console.log("Token=> ", token);
+      if (order_id) {
+        const data = {
+          token: token,
+          order_id: order_id,
+          description: "this is a payment test",
+        };
+        // const res = await api.post("/payment", data);
+        // console.log("Payment test => ", res);
+        console.log("DATA =>  ", data);
+      }
+      console.log("NO ORDER ID");
+    }
+  };
+
+  const cardStyle = {
+    style: {
+      base: {
+        color: "#F3EFE6",
+        fontFamily: "Arial, sans-serif",
+        fontSmoothing: "antialiased",
+        fontSize: "1.5rem",
+        "::placeholder": {
+          color: "#D87D4A",
+        },
+      },
+      invalid: {
+        fontFamily: "Arial, sans-serif",
+        color: "yellow",
+        iconColor: "yellow",
+      },
+    },
   };
 
   return (
@@ -40,7 +77,7 @@ const Payment = () => {
           onSubmit={handleSubmit}
           className="xl:w-full md:w-1/2 mx-auto p-4 border rounded-xl"
         >
-          <PaymentElement />
+          <CardElement id="card-element" options={cardStyle} />
           <button
             disabled={!stripe}
             className="w-1/3 mx-auto mt-2 flex justify-center text-2xl py-2 bg-[#D87D4A] hover:bg-[#70351B] font-bold text-gray-50 rounded-xl flex items-center gap-2"
