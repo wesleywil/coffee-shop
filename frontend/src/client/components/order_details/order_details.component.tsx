@@ -4,6 +4,7 @@ import type { RootState, AppDispatch } from "../../../redux/store";
 import { switch_order_hidden } from "../../../redux/utils/utils";
 import { FaTimes } from "react-icons/fa";
 import OrderDetailsItem from "../order_details_item/order_details_item.component";
+import { Link } from "react-router-dom";
 
 const OrderDetails = () => {
   const order = useSelector((state: RootState) => state.orders.selected_order);
@@ -33,9 +34,12 @@ const OrderDetails = () => {
       </div>
       <div className="text-2xl">
         <h1>TOTAL = ${order.total}</h1>
-        <button className="w-1/2 mx-auto px-4 py-1 bg-[#D87D4A] hover:bg-[#70351B] text-gray-50 font-bold rounded-xl flex justify-center items-center gap-2">
+        <Link
+          to="/test"
+          className="w-1/2 mx-auto px-4 py-1 bg-[#D87D4A] hover:bg-[#70351B] text-gray-50 font-bold rounded-xl flex justify-center items-center gap-2"
+        >
           Pay
-        </button>
+        </Link>
       </div>
     </div>
   );
