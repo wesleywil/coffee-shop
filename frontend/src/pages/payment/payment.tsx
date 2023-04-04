@@ -39,9 +39,9 @@ const Payment = () => {
           order_id: order_id,
           description: "this is a payment test",
         };
-        // const res = await api.post("/payment", data);
-        // console.log("Payment test => ", res);
-        console.log("DATA =>  ", data);
+        const res = await api.post("/payment", data);
+        console.log("Payment test => ", res);
+        //console.log("DATA =>  ", data);
       }
       console.log("NO ORDER ID");
     }
@@ -68,14 +68,14 @@ const Payment = () => {
 
   return (
     <div className="flex flex-col items-center">
-      <h1 className="font-bold text-2xl md:text-5xl text-center text-[#F3EFE6] mb-4">
+      <h1 className="mt-2 font-bold text-2xl md:text-5xl text-center text-[#F3EFE6] mb-4">
         Order Payment
       </h1>
       <div className="p-2 w-full xl:w-1/2 flex flex-col gap-4">
         <PaymentOrder />
         <form
           onSubmit={handleSubmit}
-          className="xl:w-full md:w-1/2 mx-auto p-4 border rounded-xl"
+          className="w-full xl:w-full md:w-1/2 mx-auto p-4 border rounded-xl"
         >
           <CardElement id="card-element" options={cardStyle} />
           <button
@@ -84,6 +84,14 @@ const Payment = () => {
           >
             Pay
           </button>
+          <div className="mt-2 text-xl md:text-2xl text-[#F3EFE6] flex flex-col md:flex-row md:flex-wrap md:gap-4 md:justify-center items-center">
+            <h1 className="w-full text-center mb-2 md:mb-0 border-b">
+              Test Card Info
+            </h1>
+            <h1>4242 4242 4242 4242</h1>
+            <h1>12/34</h1>
+            <h1>123</h1>
+          </div>
         </form>
       </div>
     </div>
