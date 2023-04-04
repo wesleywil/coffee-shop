@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 use App\Models\Reserve_table;
+use App\Models\Reservation;
 
 class ReserveTableController extends Controller
 {
@@ -16,10 +18,36 @@ class ReserveTableController extends Controller
     {
         $tables = Reserve_table::all();
 
+        foreach ($tables as $table) {
+            // Check if there are any active reservations for this table
+            $active_reservations = Reservation::where('reserve_tables_id', $table->id)
+                ->where('reserve_date', '>=', Carbon::today()->format('Y-m-d'))
+                ->whereIn('status', ['aproved', 'pending'])
+                ->count();
+
+            if ($active_reservations == 0) {
+                // No active reservations, so update the table status
+                $table->update(['status' => 'available']);
+
+                // Update status of past reservations for this table
+                $past_reservations = Reservation::where('reserve_tables_id', $table->id)
+                    ->where('reserve_date', '<', Carbon::today()->format('Y-m-d'))
+                    ->whereIn('status', ['aproved', 'pending'])
+                    ->get();
+
+                foreach ($past_reservations as $reservation) {
+                    $reservation->update(['status' => 'closed']);
+                }
+            }
+        }
+
         return response()->json([
             'data' => $tables
         ], 201);
     }
+
+
+
 
     /**
      * Store a newly created resource in storage.
