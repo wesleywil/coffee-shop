@@ -1,13 +1,12 @@
+import { Link } from "react-router-dom";
+import HomeImg from "../../assets/coffee.jpeg";
+
 const Homepage = () => {
   return (
     <div className="flex flex-row xl:flex-col justify-center items-center">
       <div className="mt-12 md:mt-36 self-center flex flex-col-reverse xl:flex-row justify-center gap-2 p-4">
         <div className="xl:mr-16 mx-auto">
-          <img
-            src="https://dummyimage.com/600x600"
-            alt="Cup of coffee"
-            className="rounded-xl"
-          />
+          <img src={HomeImg} alt="Cup of coffee" className="rounded-xl" />
         </div>
         <div className=" self-center flex flex-col gap-1  text-center md:w-2/3 xl:w-1/3 mx-auto">
           <h3 className="md:text-xl text-[#F3EFE6]">
@@ -22,9 +21,12 @@ const Homepage = () => {
             great coffee and believe that every cup should be a journey. Join us
             in our commitment to excellence.
           </p>
-          <button className="w-fit mx-auto md:mt-12 px-2 py-1 bg-[#D87D4A] font-bold text-xl text-[#F3EFE6] float-left  rounded-xl">
+          <Link
+            to="/catalog"
+            className="w-fit mx-auto md:mt-12 px-2 py-1 bg-[#D87D4A] font-bold text-xl text-[#F3EFE6] float-left  rounded-xl"
+          >
             Open the Catalog
-          </button>
+          </Link>
         </div>
       </div>
     </div>

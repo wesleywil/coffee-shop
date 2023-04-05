@@ -7,7 +7,7 @@ import { set_default_status } from "../../redux/reservations/reservations";
 import TableSelect from "../../components/table_select/table_select.component";
 import ReserveBox from "../../components/reserve_box/reserve_box.component";
 
-import coffeeShopMapImage from "../../assets/tables_template_vertical.png";
+import coffeeShopMapImage from "../../assets/table_layout.jpg";
 
 const Tables = () => {
   const tables = useSelector((state: RootState) => state.tables.tables);

@@ -7,6 +7,8 @@ import { add_to_cart } from "../../redux/cart/cart";
 import CatalogCategories from "../../components/catalog_categories/catalog_categories.component";
 import CatalogItem from "../../components/catalog_item/catalog_item.component";
 
+import mainImg from "../../assets/M01.jpg";
+
 const Catalog = () => {
   const categories_item = useSelector(
     (state: RootState) => state.utils.categories_tab
@@ -26,9 +28,9 @@ const Catalog = () => {
       <div className="flex justify-center items-center pb-4">
         <div className="mt-36 self-center flex xl:flex-row	md:flex-col-reverse justify-center gap-2 p-4 ">
           <div className="mx-auto flex-none mr-16 hidden md:block xl:w-1/2 md:w-1/2 md:mx-auto">
-            <img src="https://dummyimage.com/600x600" alt="Cup of coffee" />
+            <img src={mainImg} alt="Cup of coffee" className="rounded-xl" />
           </div>
-          <div className="flex-none flex flex-col gap-1 w-11/12 md:w-[40rem] border border-[#F3EFE6]">
+          <div className="flex-none flex flex-col gap-1 w-11/12 md:w-[40rem] border border-[#F3EFE6] rounded-xl">
             <h3 className="text-2xl text-[#F3EFE6] font-bold text-center mb-2">
               Catalog
             </h3>
