@@ -40,7 +40,7 @@ const Navbar = () => {
           </ul>
         </div>
         <div className="order-2 md:order-3 flex gap-2">
-          {user ? (
+          {typeof user === "object" && Object.keys(user).length !== 0 ? (
             <button
               onClick={() => dispatch(switch_hidden_menu())}
               className="px-4 py-2 bg-[#D87D4A] hover:bg-[#70351B] text-gray-50 rounded-xl flex items-center gap-2"
