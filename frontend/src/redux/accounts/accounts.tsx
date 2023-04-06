@@ -56,6 +56,12 @@ export const loginUser = createAsyncThunk(
   }
 );
 
+export const logoutUser = createAsyncThunk("account/logout", async () => {
+  const res = await api.post("/logout");
+  localStorage.removeItem("userToken");
+  return res.data;
+});
+
 export const accountsSlice = createSlice({
   name: "accounts",
   initialState,
@@ -91,6 +97,16 @@ export const accountsSlice = createSlice({
       })
       .addCase(loginUser.rejected, (state) => {
         state.error = "error in login the user";
+      })
+      .addCase(logoutUser.pending, (state) => {
+        state.status = "trying to log out the user";
+      })
+      .addCase(logoutUser.fulfilled, (state, { payload }) => {
+        state.status = "succeeded in logging out the user";
+        state.userToken = payload;
+      })
+      .addCase(logoutUser.rejected, (state) => {
+        state.error = "error in logging out the user";
       });
   },
 });
