@@ -1,11 +1,14 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../../services/api_config";
+import { User } from "../accounts/accounts";
 
 export interface Reservation {
   id: number;
   user_id: number;
-  reserve_date: Date;
+  reserve_date: string;
   status: string;
+  reserve_tables_id: number;
+  user: User;
 }
 
 export interface ReservationState {
@@ -60,14 +63,14 @@ export const updateReservation = createAsyncThunk(
   "reservations/updateReservation",
   async ({
     id,
-    date,
+    reserve_date,
     status,
   }: {
     id: number;
-    date: string;
+    reserve_date: string;
     status: string;
   }) => {
-    const res = await api.put(`/reservations/${id}`, { date, status });
+    const res = await api.put(`/reservations/${id}`, { reserve_date, status });
     return res.data;
   }
 );

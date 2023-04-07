@@ -19,6 +19,7 @@ import Tables from "./pages/tables/tables";
 import Order from "./pages/order/order";
 import MyOrders from "./client/pages/my_orders/my_orders";
 import Payment from "./pages/payment/payment";
+import Reservations from "./admin/pages/reservations/reservations";
 
 //Components
 import Navbar from "./components/navbar/navbar.component";
@@ -73,6 +74,8 @@ function App() {
           {/* Client Side Pages */}
           <Route path="/profile" element={<Profile />} />
           <Route path="/myorders" element={WithReservation(MyOrders)} />
+          {/* Admin Pages */}
+          <Route path="/admin/reservations" element={<Reservations />} />
           {/* Test Page */}
           <Route
             path="/test"
