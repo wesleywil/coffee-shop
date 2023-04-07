@@ -7,7 +7,7 @@ export interface User {
   email: string;
   created_at: string;
   updated_at: string;
-  admin: boolean;
+  admin: number;
 }
 
 export interface AccountsState {

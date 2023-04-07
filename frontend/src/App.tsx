@@ -24,6 +24,7 @@ import Reservations from "./admin/pages/reservations/reservations";
 //Components
 import Navbar from "./components/navbar/navbar.component";
 import WithReservation from "./components/withReservation/withReservation.component";
+import WithAdmin from "./admin/components/withAdmin/withAdmin.component";
 
 //Styles
 import "./App.css";
@@ -75,7 +76,7 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/myorders" element={WithReservation(MyOrders)} />
           {/* Admin Pages */}
-          <Route path="/admin/reservations" element={<Reservations />} />
+          <Route path="/admin/reservations" element={WithAdmin(Reservations)} />
           {/* Test Page */}
           <Route
             path="/test"
