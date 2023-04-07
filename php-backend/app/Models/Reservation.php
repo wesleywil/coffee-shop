@@ -19,8 +19,8 @@ class Reservation extends Model
         return $this->belongsTo(Reserve_table::class, 'reserve_tables_id');
     }
 
-    public function contact()
+    public function user()
     {
-        return $this->belongsTo(User::class, 'user_id')->select('name', 'email');
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

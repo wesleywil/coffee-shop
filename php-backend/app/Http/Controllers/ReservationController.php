@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 use App\Models\Reservation;
 use App\Models\Reserve_table;
+use App\Models\User;
 
 class ReservationController extends Controller
 {
@@ -18,7 +19,7 @@ class ReservationController extends Controller
     {
 
         if (Gate::allows('is_admin')) {
-            $reservations = Reservation::all();
+            $reservations = Reservation::with('user')->get();
             return response()->json(['data' => $reservations]);
         }
         try {
@@ -52,6 +53,8 @@ class ReservationController extends Controller
         $table->status = 'occupied';
         $table->save();
 
+        $user = User::find($user_id);
+
         //Create a new reservation
         $reservation = Reservation::create([
             'user_id' => $user_id,
@@ -62,6 +65,7 @@ class ReservationController extends Controller
 
         // Associate the seleted table with the reservation
         $reservation->reservationTable()->associate($table);
+        $reservation->user()->associate($user);
         $reservation->save();
 
         //Return a response
