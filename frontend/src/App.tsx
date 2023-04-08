@@ -20,6 +20,7 @@ import Order from "./pages/order/order";
 import MyOrders from "./client/pages/my_orders/my_orders";
 import Payment from "./pages/payment/payment";
 import Reservations from "./admin/pages/reservations/reservations";
+import Products from "./admin/pages/products/products";
 
 //Components
 import Navbar from "./components/navbar/navbar.component";
@@ -77,6 +78,8 @@ function App() {
           <Route path="/myorders" element={WithReservation(MyOrders)} />
           {/* Admin Pages */}
           <Route path="/admin/reservations" element={WithAdmin(Reservations)} />
+          {/* <Route path="/admin/products" element={WithAdmin(Products)} /> */}
+          <Route path="/admin/products" element={<Products />} />
           {/* Test Page */}
           <Route
             path="/test"
