@@ -37,6 +37,9 @@ export const productsSlice = createSlice({
   name: "products",
   initialState,
   reducers: {
+    get_all_products: (state) => {
+      state.products = state.allProducts;
+    },
     filter_by_category: (state, { payload }) => {
       let filteredProducts = state.allProducts.filter((item) => {
         return item.category.toLowerCase() === payload.toLowerCase();
@@ -45,6 +48,24 @@ export const productsSlice = createSlice({
         ...state,
         products: filteredProducts,
       };
+    },
+    search_product: (state, { payload }) => {
+      if (payload === undefined || payload === null) {
+        return state; // Return the current state without changing the products array.
+      } else if (payload === "") {
+        return {
+          ...state,
+          products: state.allProducts,
+        };
+      } else {
+        let filteredProducts = state.allProducts.filter((item) => {
+          return item.title.toLowerCase().includes(payload.toLowerCase());
+        });
+        return {
+          ...state,
+          products: filteredProducts,
+        };
+      }
     },
   },
   extraReducers: (builder) => {
@@ -55,6 +76,7 @@ export const productsSlice = createSlice({
       .addCase(fetchProducts.fulfilled, (state, { payload }) => {
         state.status = "succeeded";
         state.allProducts = payload;
+        state.products = payload;
       })
       .addCase(fetchProducts.rejected, (state) => {
         state.error = "error";
@@ -62,6 +84,7 @@ export const productsSlice = createSlice({
   },
 });
 
-export const { filter_by_category } = productsSlice.actions;
+export const { get_all_products, filter_by_category, search_product } =
+  productsSlice.actions;
 
 export default productsSlice.reducer;
