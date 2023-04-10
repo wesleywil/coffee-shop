@@ -7,6 +7,7 @@ import FilterProducts from "../../components/filter_products/filter_products.com
 import ProductItem from "../../components/product_item/product_item.component";
 import ProductSearch from "../../components/product_search/product_search.component";
 import FormProduct from "../../components/form_product/form_product.component";
+import ProductDeleteConfirmation from "../../components/product_delete_confirmation/product_delete_confirmation.component";
 
 const Products = () => {
   const products = useSelector((state: RootState) => state.products.products);
@@ -14,11 +15,19 @@ const Products = () => {
   const hidden = useSelector(
     (state: RootState) => state.utils.admin_form_product_hidden
   );
+  const deleteHidden = useSelector(
+    (state: RootState) => state.utils.product_delete_hidden
+  );
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     console.log("admin products");
-    if (status === "idle") {
+    if (
+      status === "idle" ||
+      status === "product created successfully" ||
+      status === "product updated successfully" ||
+      status === "product was deleted successfully"
+    ) {
       dispatch(fetchProducts());
     }
   }, [status, products]);
@@ -37,6 +46,9 @@ const Products = () => {
           </h1>
           {/* Products by Category */}
           <FilterProducts />
+          {/* Delete Product Confirmation */}
+          {deleteHidden ? "" : <ProductDeleteConfirmation />}
+
           {/* Filtered List of Products */}
           <div className="xl:w-1/2 xl:mx-auto flex flex-col gap-2">
             {products.length
@@ -44,10 +56,6 @@ const Products = () => {
                   <ProductItem key={item.id} item={item} />
                 ))
               : "NO PRODUCTS"}
-            {/* <ProductItem />
-            <ProductItem />
-            <ProductItem />
-            <ProductItem /> */}
           </div>
         </div>
       </div>

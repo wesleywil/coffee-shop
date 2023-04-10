@@ -2,7 +2,10 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "../../../redux/store";
 import { FaPlus } from "react-icons/fa";
-import { search_product } from "../../../redux/products/products";
+import {
+  clean_selected_product,
+  search_product,
+} from "../../../redux/products/products";
 import { switch_form_product_hidden } from "../../../redux/utils/utils";
 
 const ProductSearch = () => {
@@ -13,10 +16,15 @@ const ProductSearch = () => {
     console.log(e.target.value);
     setSearch(e.target.value);
   };
+
+  const handleNewProduct = () => {
+    dispatch(clean_selected_product());
+    dispatch(switch_form_product_hidden());
+  };
   return (
     <div className="md:w-1/2 xl:w-1/3 p-2 mx-auto flex text-xl">
       <button
-        onClick={() => dispatch(switch_form_product_hidden())}
+        onClick={() => handleNewProduct()}
         className="mr-2 px-1 bg-[#F3EFE6] hover:bg-[#D87D4A] text-[#70351B] hover:text-[#F3EFE6] rounded-full"
       >
         <FaPlus />
