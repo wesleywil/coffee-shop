@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import api from "../../services/api_config";
 
 export interface Product {
   id: number;
@@ -13,6 +14,7 @@ export interface Product {
 export interface ProductsState {
   allProducts: Array<Product>;
   products: Array<Product>;
+  product: Product;
   status: string;
   error: any;
 }
@@ -20,6 +22,7 @@ export interface ProductsState {
 const initialState: ProductsState = {
   allProducts: [],
   products: [],
+  product: {} as Product,
   status: "idle",
   error: null,
 };
@@ -27,8 +30,41 @@ const initialState: ProductsState = {
 export const fetchProducts = createAsyncThunk(
   "products/fetchProducts",
   async () => {
-    const res = await axios.get("http://127.0.0.1:8000/api/products/");
+    const res = await api.get("/products/");
     console.log("Result Products =>", res.data);
+    return res.data.data;
+  }
+);
+
+export const selectProduct = createAsyncThunk(
+  "products/selectProduct",
+  async (id: number) => {
+    const res = await api.get(`/products/${id}`);
+    return res.data.data;
+  }
+);
+
+export const createProduct = createAsyncThunk(
+  "products/createProduct",
+  async (data: any) => {
+    const res = await api.post("/products", data);
+    return res.data.data;
+  }
+);
+
+export const updateProduct = createAsyncThunk(
+  "products/updateProduct",
+  async (data: any) => {
+    const { id, ...noIdData } = data;
+    const res = await api.put(`/products/${id}`, noIdData);
+    return res.data.data;
+  }
+);
+
+export const deleteProduct = createAsyncThunk(
+  "products/deleteProduct",
+  async (id: number) => {
+    const res = await api.delete(`/products/${id}`);
     return res.data.data;
   }
 );
@@ -37,6 +73,9 @@ export const productsSlice = createSlice({
   name: "products",
   initialState,
   reducers: {
+    clean_selected_product: (state) => {
+      state.product = {} as Product;
+    },
     get_all_products: (state) => {
       state.products = state.allProducts;
     },
@@ -51,7 +90,7 @@ export const productsSlice = createSlice({
     },
     search_product: (state, { payload }) => {
       if (payload === undefined || payload === null) {
-        return state; // Return the current state without changing the products array.
+        return state;
       } else if (payload === "") {
         return {
           ...state,
@@ -80,11 +119,52 @@ export const productsSlice = createSlice({
       })
       .addCase(fetchProducts.rejected, (state) => {
         state.error = "error";
+      })
+      .addCase(selectProduct.pending, (state) => {
+        state.status = "trying to select the product";
+      })
+      .addCase(selectProduct.fulfilled, (state, { payload }) => {
+        state.status = "succeeded in selecting the product";
+        state.product = payload;
+      })
+      .addCase(selectProduct.rejected, (state) => {
+        state.error = "error while trying to select the product";
+      })
+      .addCase(createProduct.pending, (state) => {
+        state.status = "trying to create a new product";
+      })
+      .addCase(createProduct.fulfilled, (state) => {
+        state.status = "product created successfully";
+      })
+      .addCase(createProduct.rejected, (state) => {
+        state.error = "error in creating a new product";
+      })
+      .addCase(updateProduct.pending, (state) => {
+        state.status = "trying to update the product";
+      })
+      .addCase(updateProduct.fulfilled, (state) => {
+        state.status = "product updated successfully";
+      })
+      .addCase(updateProduct.rejected, (state) => {
+        state.error = "error while trying to update the product";
+      })
+      .addCase(deleteProduct.pending, (state) => {
+        state.status = "trying to delete the product";
+      })
+      .addCase(deleteProduct.fulfilled, (state) => {
+        state.status = "product was deleted successfully";
+      })
+      .addCase(deleteProduct.rejected, (state) => {
+        state.error = "error while trying to delete the product";
       });
   },
 });
 
-export const { get_all_products, filter_by_category, search_product } =
-  productsSlice.actions;
+export const {
+  clean_selected_product,
+  get_all_products,
+  filter_by_category,
+  search_product,
+} = productsSlice.actions;
 
 export default productsSlice.reducer;
