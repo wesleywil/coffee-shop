@@ -11,6 +11,7 @@ export interface UtilsState {
   select_table: SelectTable;
   order_details_hidden: boolean;
   admin_form_product_hidden: boolean;
+  product_delete_hidden: boolean;
 }
 
 const initialState: UtilsState = {
@@ -19,6 +20,7 @@ const initialState: UtilsState = {
   select_table: { id: 0, seats: 0 },
   order_details_hidden: true,
   admin_form_product_hidden: true,
+  product_delete_hidden: true,
 };
 
 export const utilsSlice = createSlice({
@@ -40,6 +42,9 @@ export const utilsSlice = createSlice({
     switch_form_product_hidden: (state) => {
       state.admin_form_product_hidden = !state.admin_form_product_hidden;
     },
+    switch_product_delete_hidden: (state) => {
+      state.product_delete_hidden = !state.product_delete_hidden;
+    },
     select_table: (state, { payload }) => {
       state.select_table = payload;
     },
@@ -52,6 +57,7 @@ export const {
   switch_hidden_select_table,
   switch_order_hidden,
   switch_form_product_hidden,
+  switch_product_delete_hidden,
   select_table,
 } = utilsSlice.actions;
 
